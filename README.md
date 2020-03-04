@@ -5,8 +5,12 @@ Create a disbursement report from a list of donations in CSV.
 ## Dependencies
 <h4>Now, you have to install dependencies by using npm (node-package-manager), open your termial, and first type</h4>
 
+    sudo apt-get update
     npm install
- <h4>After runing this code then all dependencies will come to in your file.</h4>
+    
+    
+<h4>Then you have to open that clone file </h4>
+ <h4>After this code then all dependencies will come to in your file.</h4>
  
  
  then run your server 
