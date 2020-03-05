@@ -10,11 +10,7 @@ module.exports=(convert,axios,csvtojson)=>{
                     var Donation_Currency=i.Donation_Currency                    
                     for (var [key,value] of Object.entries(data_rates)){                        
                         if (Donation_Currency==key){
-                            if(value<0){
-                                i.Donation_Amount=i.Donation_Amount*value +" "+Base
-                            }else{
-                                i.Donation_Amount= i.Donation_Amount/value +" "+ Base
-                            }
+                            i.Donation_Amount= i.Donation_Amount/value +" "+ Base
                         }
                     }
                 }
