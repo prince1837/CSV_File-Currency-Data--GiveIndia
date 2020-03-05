@@ -2,6 +2,7 @@ const express=require('express')
 const fs=require('fs')
 const axios=require('axios')
 const Json2csv = require('json2csv').parse;
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvtojson = require('csvtojson')
 const dotenv=require('dotenv').config()
 const port = process.env.port
@@ -20,8 +21,7 @@ require('./Convert_Base/Convert')(convert,axios,csvtojson)
 
 var Total_donation=express.Router()
 app.use('/',Total_donation)
-require('./Total_Data/total_donation')(Total_donation,axios,csvtojson,Json2csv,fs)
-
+require('./Total_Data/total_donation')(Total_donation,axios,csvtojson,createCsvWriter)
 
 
 

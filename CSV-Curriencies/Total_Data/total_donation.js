@@ -1,11 +1,9 @@
-module.exports=(Total_donation,axios,csvtojson,Json2csv,fs)=>{
-    Total_donation.get('/total_data',(req,res)=>{
+module.exports=(Total_donation,axios,csvtojson,createCsvWriter)=>{
+    Total_donation.get('/total_data/:base',(req,res)=>{
         var total_data=[]
-        var my_data=""
-
         var Base=req.params.currency_base
-        csvtojson().fromFile('./data.csv').then((data)=>{
-            var Base="INR"
+        csvtojson().fromFile('./Csv_File/data.csv').then((data)=>{
+            var Base=req.params.base;
             var Give_currency=data            
             axios.get('https://api.exchangeratesapi.io/latest?base='+Base)
             .then((data)=>{
@@ -25,6 +23,7 @@ module.exports=(Total_donation,axios,csvtojson,Json2csv,fs)=>{
                 var nonprofit_data=[]
                 for(var i of Give_currency){
                     if (!nonprofit_data.includes(i.NonProfit)){
+                        nonprofit_data.push(i.NonProfit)
                         var count=0
                         for (j of Give_currency){
                             if (i.NonProfit==j.NonProfit){
@@ -33,7 +32,6 @@ module.exports=(Total_donation,axios,csvtojson,Json2csv,fs)=>{
                                    i.Fee+=j.Fee
                                    count+=1
                                }else{
-                                nonprofit_data.push(i.NonProfit)
                                 count+=1
                                }
                             }
@@ -41,25 +39,23 @@ module.exports=(Total_donation,axios,csvtojson,Json2csv,fs)=>{
                         var data_dict={
                             "NonProfit":i.NonProfit,
                             "Total_Amount": i.Donation_Amount+" "+Base,
-                            "Numbers of Donations":count,
-                            "Total Fee":i.Fee
-                        }
-                        var index=0
+                            "Numbers_of_Donations":count,
+                            "Total_Fee":i.Fee
+                        };
+                        var csv_Writer = createCsvWriter({
+                            path: "./Csv_File/Total_Donation.csv",
+                            header: [
+                                { id: "NonProfit", title: "Nonprofit" },
+                                { id: "Total_Amount", title: "Total Amount" },
+                                { id: "Numbers_of_Donations", title: "Numbers of Donations"},
+                                { id: "Total_Fee", title: "Total Fee"}
+                              ]
+                          });
                         total_data.push(data_dict)
-                        csvtojson().fromFile('./Total_Donation.csv').then(source =>{
-                            if(source==null){
-                                var Headers="NonProfit"+","+"Total_Amount"+","+"Numbers of Donations"+","+"Total Fee"
-                                my_data+=Headers
-                            }                            
-                            source.push(total_data[index])
-                            index+=1
-                            var csv=Json2csv(source)
-                            var csv1=csv.toString()
-                            var csv2=csv1.slice(61,140)
-                            my_data+=csv2
-                            fs.writeFileSync('./Total_Donation.csv',my_data)
-                            console.log("data inserted into csv")
-                            res.send(total_data)
+                        csv_Writer.writeRecords(total_data)
+                        .then(() => {
+                            console.log("Data inserted Sucessfully in CSV file");
+                            res.send(total_data);
                         })
                     } 
                 }

@@ -1,7 +1,7 @@
 module.exports=(convert,axios,csvtojson)=>{
     convert.get('/data/:currency_base',(req,res)=>{
         var Base=req.params.currency_base;
-        csvtojson().fromFile('./data.csv').then((data)=>{
+        csvtojson().fromFile('./Csv_File/data.csv').then((data)=>{
             var Give_currency=data
             axios.get('https://api.exchangeratesapi.io/latest?base='+Base)
             .then((data)=>{
