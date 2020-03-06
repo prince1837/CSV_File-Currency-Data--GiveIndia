@@ -12,9 +12,10 @@ module.exports=(convert,axios,csvtojson)=>{
                         if (Donation_Currency==key){
                             i.Donation_Amount= i.Donation_Amount/value +" "+ Base
                         }
-                    }
+                    } 
                 }
                 res.send(Give_currency)
+                // console.log("Donation_Amount convert into "+ Base +" sucessfully")
             }).catch((err)=>{
                 res.send(err.message)
                 console.log(err);
