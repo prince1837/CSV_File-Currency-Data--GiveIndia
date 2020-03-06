@@ -12,7 +12,7 @@ module.exports=(Total_donation,axios,csvtojson,createCsvWriter)=>{
                     var Donation_Currency=i.Donation_Currency                    
                     for (var [key,value] of Object.entries(data_rates)){                        
                         if (Donation_Currency==key){
-                                i.Donation_Amount=i.Donation_Amount*value
+                                i.Donation_Amount=i.Donation_Amount/value
                         }
                     }
                 }
